@@ -1,0 +1,8 @@
+# Vim
+.*.swp
+*.swp
+
+# Python
+*.pyc
+Python/prova/*
+
