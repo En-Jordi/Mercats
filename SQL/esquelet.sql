@@ -47,12 +47,16 @@ ALTER TABLE public.producte OWNER TO jordipsql;
 CREATE TABLE public.beneficiari (
 	id serial NOT NULL,
 	comerc text,
+	intern smallint,
 	CONSTRAINT pk_beneficiari PRIMARY KEY (id)
 
 );
 -- ddl-end --
+COMMENT ON COLUMN public.beneficiari.intern IS E'Clau forània per identificar quan es faci una transacció entre un compte meu a un altre compte meu';
+-- ddl-end --
 ALTER TABLE public.beneficiari OWNER TO jordipsql;
 -- ddl-end --
+
 
 -- object: public.categoria | type: TABLE --
 -- DROP TABLE IF EXISTS public.categoria CASCADE;
@@ -557,6 +561,16 @@ COMMENT ON COLUMN public.url_bonarea.url IS E'url on està el producte';
 ALTER TABLE public.url_bonarea OWNER TO jordipsql;
 -- ddl-end --
 
+-- object: fkey_compte | type: CONSTRAINT --
+-- ALTER TABLE public.beneficiari DROP CONSTRAINT IF EXISTS fkey_compte CASCADE;
+ALTER TABLE public.beneficiari ADD CONSTRAINT fkey_compte FOREIGN KEY (intern)
+REFERENCES public.comptes (id) MATCH FULL
+ON DELETE NO ACTION ON UPDATE NO ACTION;
+-- ddl-end --
+COMMENT ON CONSTRAINT fkey_compte ON public.beneficiari  IS E'Clau forània per identificar quan es faci una transacció entre un compte meu a un altre compte meu';
+-- ddl-end --
+
+
 -- object: fkey_subcategoria | type: CONSTRAINT --
 -- ALTER TABLE public.categoria DROP CONSTRAINT IF EXISTS fkey_subcategoria CASCADE;
 ALTER TABLE public.categoria ADD CONSTRAINT fkey_subcategoria FOREIGN KEY (subcategoria)
@@ -896,6 +910,7 @@ INSERT INTO beneficiari (comerc) SELECT 'Renfe' WHERE NOT EXISTS (SELECT * FROM 
 INSERT INTO beneficiari (comerc) SELECT 'Bar' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Bar');
 INSERT INTO beneficiari (comerc) SELECT 'Yoigo' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Yoigo');
 INSERT INTO beneficiari (comerc) SELECT 'La Caixa' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'La Caixa');
+INSERT INTO beneficiari (comerc) SELECT 'Gasolinera' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Gasolinera');
 
 
 -- Bancs
@@ -903,6 +918,8 @@ INSERT INTO comptes (banc) SELECT 'La caixa' WHERE NOT EXISTS (SELECT * FROM com
 INSERT INTO comptes (banc) SELECT 'Caixa Enginyers' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Caixa Enginyers');
 INSERT INTO comptes (banc) SELECT 'Liquid' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Liquid');
 INSERT INTO comptes (banc) SELECT 'Liquid pedra' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Liquid pedra');
+INSERT INTO comptes (banc) SELECT 'Paypal' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Paypal');
+INSERT INTO comptes (banc) SELECT 'Revolut' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Revolut');
 
 
 -- Extensions
