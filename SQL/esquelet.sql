@@ -1,17 +1,3 @@
--- Database generated with pgModeler (PostgreSQL Database Modeler).
--- pgModeler  version: 0.9.3
--- PostgreSQL version: 13.0
--- Project Site: pgmodeler.io
--- Model Author: ---
--- object: jordipsql | type: ROLE --
--- DROP ROLE IF EXISTS jordipsql;
--- CREATE ROLE jordipsql WITH CREATEDB;
--- ddl-end --
-
-
--- Database creation must be performed outside a multi lined SQL file. 
--- These commands were put in this file only as a convenience.
--- 
 -- object: temporal | type: DATABASE --
 DROP DATABASE IF EXISTS temporal;
 CREATE DATABASE temporal;
