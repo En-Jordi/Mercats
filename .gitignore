@@ -6,3 +6,5 @@
 *.pyc
 Python/prova/*
 
+# Config
+Config/config_BonArea.json
