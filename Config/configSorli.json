@@ -1,0 +1,49 @@
+{
+	"preu":
+	{
+		"tag":"span",
+		"etiqueta":"id",
+		"contingut":"infoproduct-content--price"
+	},
+	"404":
+	{
+		"tag":"div",
+		"etiqueta":"class",
+		"contigut":"page-not-found__title"
+	},
+	"ofertes":
+	{
+		"general":
+		{
+			"tag":"span",
+			"etiqueta":"id",
+			"contingut":"infoproduct-content--offerprice"
+		},
+		"al50":
+		{
+			"tag": "img",
+			"etiqueta":"alt",
+			"contingut":"picto oferta",
+			"imatge":"2_al_50.png",
+			"cadena_python":"if zoup.find('img', attrs={'alt':'picto oferta'})['src'].split('/')[len(zoup.find('img', attrs={'alt':'picto oferta'})['src'].split('/')) - 1] == '2_al_50.png'"
+		},
+		"al70":
+		{
+			"tag": "img",
+			"etiqueta":"alt",
+			"contingut":"picto oferta",
+			"imatge":"2_al_70.png",
+			"cadena_python":"if zoup.find('img', attrs={'alt':'picto oferta'})['src'].split('/')[len(zoup.find('img', attrs={'alt':'picto oferta'})['src'].split('/')) - 1] == '2_al_70.png'"
+
+		},
+		"2unitat":
+		{
+			"tag":"span",
+			"etiqueta": "id",
+			"contingut":"infoproduct-content--offerdates-desc",
+			"compara":" Oferta de preu.",
+			"comparar":"diferent"
+		}
+	}
+}
+
