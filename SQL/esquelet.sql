@@ -357,7 +357,7 @@ CREATE TABLE public.url_sorli (
 	id serial NOT NULL,
 	fkey_producte integer,
 	url text,
-	CONSTRAINT id_sorli PRIMARY KEY (id)
+	CONSTRAINT id_url_sorli PRIMARY KEY (id)
 );
 -- ddl-end --
 COMMENT ON COLUMN public.url_sorli.url IS E'url on està el producte';
@@ -371,10 +371,10 @@ CREATE TABLE public.url_condis (
 	id serial NOT NULL,
 	fkey_producte integer,
 	url text,
-	CONSTRAINT id_2 PRIMARY KEY (id)
+	CONSTRAINT id_url_condis PRIMARY KEY (id)
 );
 -- ddl-end --
-COMMENT ON COLUMN public.url_condis.url IS E'url on està guardat el producte';
+COMMENT ON COLUMN public.url_condis.url IS E'url on està el producte';
 -- ddl-end --
 ALTER TABLE public.url_condis OWNER TO jordipsql;
 -- ddl-end --
@@ -385,12 +385,40 @@ CREATE TABLE public.url_bonarea (
 	id serial NOT NULL,
 	fkey_producte integer,
 	url text,
-	CONSTRAINT id_1 PRIMARY KEY (id)
+	CONSTRAINT id_url_bonarea PRIMARY KEY (id)
 );
 -- ddl-end --
 COMMENT ON COLUMN public.url_bonarea.url IS E'url on està el producte';
 -- ddl-end --
 ALTER TABLE public.url_bonarea OWNER TO jordipsql;
+-- ddl-end --
+
+-- object: public.url_frankfurt_online | type: TABLE --
+-- DROP TABLE IF EXISTS public.url_frankfurt_online CASCADE;
+CREATE TABLE public.url_frankfurt_online (
+	id serial NOT NULL,
+	fkey_producte integer,
+	url text,
+	CONSTRAINT id_url_frankfurt_online PRIMARY KEY (id)
+);
+-- ddl-end --
+COMMENT ON COLUMN public.url_frankfurt_online.url IS E'url on està el producte';
+-- ddl-end --
+ALTER TABLE public.url_frankfurt_online OWNER TO jordipsql;
+-- ddl-end --
+
+-- object: public.url_casa_ametller | type: TABLE --
+-- DROP TABLE IF EXISTS public.url_casa_ametller CASCADE;
+CREATE TABLE public.url_casa_ametller (
+	id serial NOT NULL,
+	fkey_producte integer,
+	url text,
+	CONSTRAINT id_url_casa_ametller PRIMARY KEY (id)
+);
+-- ddl-end --
+COMMENT ON COLUMN public.url_casa_ametller.url IS E'url on està el producte';
+-- ddl-end --
+ALTER TABLE public.url_casa_ametller OWNER TO jordipsql;
 -- ddl-end --
 
 -- object: public.crea_quantitat_ambpes | type: FUNCTION --
@@ -974,6 +1002,11 @@ INSERT INTO comptes (banc) SELECT 'Liquid' WHERE NOT EXISTS (SELECT * FROM compt
 INSERT INTO comptes (banc) SELECT 'Liquid pedra' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Liquid pedra');
 INSERT INTO comptes (banc) SELECT 'Paypal' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Paypal');
 INSERT INTO comptes (banc) SELECT 'Revolut' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Revolut');
+
+
+-- Altres
+INSERT INTO beneficiari (comerc) SELECT 'Frankfurt online' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Frankfurt online' );
+INSERT INTO beneficiari (comerc) SELECT 'Dentista - Univers dental' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Dentista - Univers dental' );
 
 
 -- Extensions
