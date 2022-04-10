@@ -564,7 +564,7 @@ ALTER FUNCTION public.crea_cistell(integer, VARIADIC integer[]) OWNER TO jordips
 -- object: public.taulatiquets | type: FUNCTION --
 -- DROP FUNCTION IF EXISTS public.taulatiquets(integer) CASCADE;
 CREATE OR REPLACE FUNCTION public.taulatiquets(variable integer)
-  RETURNS TABLE(nom text, descripcio text, ean text, ofertes text, pvp numeric, quantitat integer)
+  RETURNS TABLE(nom text, descripcio text, ean text, ofertes text, pvp numeric, quantitat integer, pes numeric(10,3))
   LANGUAGE plpgsql
   STRICT COST 1
 AS $function$
@@ -579,7 +579,7 @@ DECLARE
     FOR counter IN 1..longitud
     LOOP
       EXECUTE 'SELECT fkey_quantitat_' || counter || ' from cistell_compra where id = ' || variable INTO hola;
-      RETURN QUERY EXECUTE 'SELECT pr.nom,pr.descripcio,pr.ean,hi.ofertes,hi.pvp,qu.quantitat FROM quantitat AS qu INNER JOIN historicpreus AS hi ON hi.id = qu.fkey_historicpreus INNER JOIN producte AS pr ON pr.id = hi.fkey_producte WHERE qu.id = ' || hola;
+      RETURN QUERY EXECUTE 'SELECT pr.nom,pr.descripcio,pr.ean,hi.ofertes,hi.pvp,qu.quantitat,qu.pes FROM quantitat AS qu INNER JOIN historicpreus AS hi ON hi.id = qu.fkey_historicpreus INNER JOIN producte AS pr ON pr.id = hi.fkey_producte WHERE qu.id = ' || hola;
     END LOOP;
   END;
 $function$;
@@ -1007,6 +1007,7 @@ INSERT INTO comptes (banc) SELECT 'Revolut' WHERE NOT EXISTS (SELECT * FROM comp
 -- Altres
 INSERT INTO beneficiari (comerc) SELECT 'Frankfurt online' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Frankfurt online' );
 INSERT INTO beneficiari (comerc) SELECT 'Dentista - Univers dental' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Dentista - Univers dental' );
+INSERT INTO beneficiari (comerc) SELECT 'Can Bacinetes' WHERE NOT EXISTS ( SELECT * FROM beneficiari WHERE comerc = 'Can Bacinetes');
 
 
 -- Extensions
