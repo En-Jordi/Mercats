@@ -930,10 +930,12 @@ INSERT INTO subcategoria (nom) SELECT 'General' WHERE NOT EXISTS (SELECT * FROM 
 INSERT INTO subcategoria (nom) SELECT 'Dentista' WHERE NOT EXISTS (SELECT * FROM subcategoria WHERE nom = 'Dentista' );
 INSERT INTO subcategoria (nom) SELECT 'Traumatòleg' WHERE NOT EXISTS (SELECT * FROM subcategoria WHERE nom = 'Traumatòleg' );
 INSERT INTO subcategoria (nom) SELECT 'Osteopata' WHERE NOT EXISTS (SELECT * FROM subcategoria WHERE nom = 'Osteopata' );
+INSERT INTO subcategoria (nom) SELECT 'Interna' WHERE NOT EXISTS (SELECT * FROM subcategoria WHERE nom = 'Interna' );
 INSERT INTO categoria (nom,subcategoria) SELECT 'Metge',(SELECT id FROM subcategoria WHERE nom = 'General') WHERE NOT EXISTS (SELECT * FROM categoria WHERE nom = 'Metge' AND subcategoria = (SELECT id FROM subcategoria WHERE nom = 'General'));
 INSERT INTO categoria (nom,subcategoria) SELECT 'Metge',(SELECT id FROM subcategoria WHERE nom = 'Dentista') WHERE NOT EXISTS (SELECT * FROM categoria WHERE nom = 'Metge' AND subcategoria = (SELECT id FROM subcategoria WHERE nom = 'Dentista'));
 INSERT INTO categoria (nom,subcategoria) SELECT 'Metge',(SELECT id FROM subcategoria WHERE nom = 'Traumatòleg') WHERE NOT EXISTS (SELECT * FROM categoria WHERE nom = 'Metge' AND subcategoria = (SELECT id FROM subcategoria WHERE nom = 'Traumatòleg'));
 INSERT INTO categoria (nom,subcategoria) SELECT 'Metge',(SELECT id FROM subcategoria WHERE nom = 'Osteopata') WHERE NOT EXISTS (SELECT * FROM categoria WHERE nom = 'Metge' AND subcategoria = (SELECT id FROM subcategoria WHERE nom = 'Osteopata'));
+INSERT INTO categoria (nom,subcategoria) SELECT 'Transferència',(SELECT id FROM subcategoria WHERE nom = 'Interna') WHERE NOT EXISTS (SELECT * FROM categoria WHERE nom = 'Transferència' AND subcategoria = (SELECT id FROM subcategoria WHERE nom = 'Interna'));
 
 INSERT INTO subcategoria (nom) SELECT 'Gasolina' WHERE NOT EXISTS (SELECT * FROM subcategoria WHERE nom = 'Gasolina');
 INSERT INTO subcategoria (nom) SELECT 'Assegurança' WHERE NOT EXISTS (SELECT * FROM subcategoria WHERE nom = 'Assegurança');
@@ -993,9 +995,10 @@ INSERT INTO beneficiari (comerc) SELECT 'Bar' WHERE NOT EXISTS (SELECT * FROM be
 INSERT INTO beneficiari (comerc) SELECT 'Yoigo' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Yoigo');
 INSERT INTO beneficiari (comerc) SELECT 'La Caixa' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'La Caixa');
 INSERT INTO beneficiari (comerc) SELECT 'Gasolinera' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Gasolinera');
+INSERT INTO beneficiari (comerc) SELECT 'Metàl·lic' WHERE NOT EXISTS (SELECT * FROM beneficiari WHERE comerc = 'Metàl·lic');
 
 
--- Bancs
+- Bancs
 INSERT INTO comptes (banc) SELECT 'La caixa' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'La caixa');
 INSERT INTO comptes (banc) SELECT 'Caixa Enginyers' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Caixa Enginyers');
 INSERT INTO comptes (banc) SELECT 'Liquid' WHERE NOT EXISTS (SELECT * FROM comptes WHERE banc = 'Liquid');

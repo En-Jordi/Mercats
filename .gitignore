@@ -6,5 +6,8 @@
 *.pyc
 Python/prova/*
 
+# SQL
+SQL/dades.sql
+
 # Config
 Config/config_BonArea.json
