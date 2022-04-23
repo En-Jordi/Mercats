@@ -183,28 +183,53 @@ ALTER TABLE public.historicpreus ENABLE ROW LEVEL SECURITY;
 
 -- object: public.troba_id_quantitat | type: FUNCTION --
 -- DROP FUNCTION IF EXISTS public.troba_id_quantitat(integer,integer) CASCADE;
-CREATE OR REPLACE FUNCTION public.troba_id_quantitat (IN variable1 integer, IN variable2 integer)
-	RETURNS integer
-	LANGUAGE plpgsql
-	STABLE
-	CALLED ON NULL INPUT
-	SECURITY INVOKER
-	COST 1
-	AS $$
+--CREATE OR REPLACE FUNCTION public.troba_id_quantitat (IN variable1 integer, IN variable2 integer)
+--	RETURNS integer
+--	LANGUAGE plpgsql
+--	STABLE
+--	CALLED ON NULL INPUT
+--	SECURITY INVOKER
+--	COST 1
+--	AS $$
+--  DECLARE
+--    resultat INTEGER;
+--  BEGIN
+--    SELECT id INTO resultat FROM quantitat WHERE quantitat = variable1 AND fkey_historicpreus = variable2;
+--    IF resultat IS NOT NULL THEN
+--      RETURN resultat;
+--    ELSE
+--      resultat := 0;
+--      RETURN resultat;
+--    END IF;
+--  END;
+--$$;
+-- ddl-end --
+--ALTER FUNCTION public.troba_id_quantitat(integer,integer) OWNER TO jordipsql;
+-- ddl-end --
+
+-- object: public.troba_id_quantitat_normal | type: FUNCTION --
+-- DROP FUNCTION IF EXISTS public.troba_id_quantitat_normal(integer,numeric,text,text,text) CASCADE;
+CREATE OR REPLACE FUNCTION troba_id_quantitat_normal(variable_quanti integer, variable_preu numeric(10,2), variable_ofert text, variable_benef text, variable_codi text)
+    RETURNS INTEGER
+    LANGUAGE plpgsql
+    AS $$
   DECLARE
     resultat INTEGER;
+    fkey_h INTEGER;
   BEGIN
-    SELECT id INTO resultat FROM quantitat WHERE quantitat = variable1 AND fkey_historicpreus = variable2;
+    SELECT id INTO fkey_h FROM historicpreus WHERE pvp = variable_preu and ofertes = variable_ofert AND stock = 't' AND fkey_beneficiari = (SELECT id FROM beneficiari WHERE comerc = variable_benef) AND fkey_producte = (SELECT id FROM producte WHERE ean = variable_codi) ORDER BY (SELECT now()<->data) LIMIT 1;
+    resultat := (SELECT id FROM quantitat where quantitat = variable_quanti AND fkey_historicpreus = fkey_h);
     IF resultat IS NOT NULL THEN
       RETURN resultat;
     ELSE
-      resultat := 0;
+      INSERT INTO quantitat (quantitat, fkey_historicpreus) SELECT variable_quanti,fkey_h WHERE NOT EXISTS (SELECT * FROM quantitat WHERE quantitat = variable_quanti AND fkey_historicpreus = fkey_h );
+      resultat := (SELECT id FROM quantitat where quantitat = variable_quanti AND fkey_historicpreus = fkey_h);
       RETURN resultat;
     END IF;
   END;
 $$;
 -- ddl-end --
-ALTER FUNCTION public.troba_id_quantitat(integer,integer) OWNER TO jordipsql;
+ALTER FUNCTION public.troba_id_quantitat_normal(integer,numeric,text,text,text) OWNER TO jordipsql;
 -- ddl-end --
 
 -- object: public.troba_id_cistell | type: FUNCTION --
