@@ -614,7 +614,7 @@ ALTER FUNCTION public.taulatiquets(integer) OWNER TO jordipsql;
 
 -- object: public.trigger_funcio_stock_historicpreus | type: FUNCTION --
 -- DROP FUNCTION IF EXISTS public.trigger_funcio_stock_historicpreus() CASCADE;
-CREATE FUNCTION public.trigger_funcio_stock_historicpreus ()
+CREATE OR REPLACE FUNCTION public.trigger_funcio_stock_historicpreus ()
 	RETURNS trigger
 	LANGUAGE plpgsql
 	VOLATILE 
@@ -623,11 +623,6 @@ CREATE FUNCTION public.trigger_funcio_stock_historicpreus ()
 	PARALLEL UNSAFE
 	COST 1
 	AS $$
-BEGIN
-CREATE OR REPLACE FUNCTION public.trigger_funcio_stock_historicpreus()
- RETURNS trigger
- LANGUAGE plpgsql
-AS $function$
 BEGIN
     CASE
         WHEN OLD.stock IS TRUE AND NEW.stock IS FALSE AND (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_beneficiari = OLD.fkey_beneficiari AND fkey_producte = OLD.fkey_producte AND baixa IS NULL AND alta IS NULL )) IS FALSE THEN INSERT INTO eliminats (fkey_beneficiari, fkey_producte, baixa) SELECT OLD.fkey_beneficiari,OLD.fkey_producte,(SELECT current_date) WHERE NOT EXISTS (SELECT * FROM eliminats WHERE fkey_beneficiari = OLD.fkey_beneficiari AND fkey_producte = OLD.fkey_producte AND baixa = (SELECT current_date));
