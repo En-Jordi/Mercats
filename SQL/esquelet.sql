@@ -624,27 +624,19 @@ CREATE FUNCTION public.trigger_funcio_stock_historicpreus ()
 	COST 1
 	AS $$
 BEGIN
-    -- No existeix el producte
-    IF (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa IS NULL AND alta IS NULL)) IS FALSE THEN
-        IF OLD.stock IS TRUE AND NEW.stock IS FALSE THEN
-            INSERT INTO eliminats (fkey_producte,fkey_beneficiari,baixa) SELECT OLD.fkey_producte,OLD.fkey_beneficiari,(SELECT current_date) WHERE NOT EXISTS (SELECT * FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa = (SELECT current_date));
-        -- Evitem crear entrada quan s'insereixi un nou producte
-        --ELSIF OLD.stock IS FALSE AND NEW.stock IS TRUE THEN
-            --UPDATE eliminats SET alta = (SELECT current_date) WHERE id = (SELECT id FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa IS NOT NULL AND alta IS NULL);
-        END IF;
-    -- Existeix el producte amb NOMÉS BAIXA
-    ELSIF (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa IS NOT NULL AND alta IS NULL)) IS TRUE THEN
-        -- Aquest cas es fa a l_anterior
-        --IF OLD.stock IS TRUE AND NEW.stock IS FALSE THEN
-            --INSERT INTO eliminats (fkey_producte,fkey_beneficiari,baixa) SELECT OLD.fkey_producte,fkey_beneficiari,(SELECT current_date) WHERE NOT EXISTS (SELECT * FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa = (SELECT current_date));
-        IF OLD.stock IS FALSE AND NEW.stock IS TRUE THEN
-            UPDATE eliminats SET alta = (SELECT current_date) WHERE id = (SELECT id FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa IS NOT NULL AND alta IS NULL);
-        END IF;
-    -- Existeix el producte amb BAIXA I ALTA
-    ELSIF (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa IS NOT NULL AND alta IS NOT NULL)) IS TRUE THEN
-        INSERT INTO eliminats (fkey_producte,fkey_beneficiari,baixa) VALUES (OLD.fkey_producte,OLD.fkey_beneficiari,(SELECT current_date));
-    END IF;
-    
+CREATE OR REPLACE FUNCTION public.trigger_funcio_stock_historicpreus()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+    CASE
+        WHEN OLD.stock IS TRUE AND NEW.stock IS FALSE AND (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_beneficiari = OLD.fkey_beneficiari AND fkey_producte = OLD.fkey_producte AND baixa IS NULL AND alta IS NULL )) IS FALSE THEN INSERT INTO eliminats (fkey_beneficiari, fkey_producte, baixa) SELECT OLD.fkey_beneficiari,OLD.fkey_producte,(SELECT current_date) WHERE NOT EXISTS (SELECT * FROM eliminats WHERE fkey_beneficiari = OLD.fkey_beneficiari AND fkey_producte = OLD.fkey_producte AND baixa = (SELECT current_date));
+        WHEN OLD.stock IS TRUE AND NEW.stock IS FALSE AND (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_beneficiari = OLD.fkey_beneficiari AND fkey_producte = OLD.fkey_producte AND baixa IS NOT NULL AND alta IS NOT NULL)) IS TRUE THEN INSERT INTO eliminats (fkey_producte,baixa) VALUES (NEW.fkey_producte , (SELECT current_date));
+        WHEN OLD.stock IS FALSE AND NEW.stock IS TRUE AND (SELECT EXISTS(SELECT id FROM eliminats WHERE fkey_beneficiari = OLD.fkey_beneficiari AND fkey_producte = OLD.fkey_producte AND baixa IS NOT NULL AND alta IS NULL)) IS TRUE THEN UPDATE eliminats SET alta = (SELECT current_date) WHERE id = (SELECT id FROM eliminats WHERE fkey_producte = OLD.fkey_producte AND fkey_beneficiari = OLD.fkey_beneficiari AND baixa IS NOT NULL AND alta IS NULL);
+        ELSE
+            --do nothing
+    END CASE;
+   
     RETURN NEW;
 END;
 $$;
