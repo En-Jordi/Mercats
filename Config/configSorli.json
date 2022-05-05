@@ -3,13 +3,14 @@
 	{
 		"tag":"span",
 		"etiqueta":"id",
-		"contingut":"infoproduct-content--price"
+		"normal":"infoproduct-content--price",
+		"oferta":"infoproduct-content--offerprice"
 	},
 	"404":
 	{
 		"tag":"div",
 		"etiqueta":"class",
-		"contigut":"page-not-found__title"
+		"contingut":"page-not-found__title"
 	},
 	"ofertes":
 	{
@@ -43,6 +44,12 @@
 			"contingut":"infoproduct-content--offerdates-desc",
 			"compara":" Oferta de preu.",
 			"comparar":"diferent"
+		},
+		"antic":
+		{
+			"tag": "span",
+			"etiqueta": "class",
+			"preu": "product-detail--old-price u-danger u-line--through-diagonal"
 		}
 	}
 }
